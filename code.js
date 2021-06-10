@@ -32,11 +32,22 @@ const convertText = (text) => {
 	for (let i = 0; i < text.length; i++){
 
 		if ("abcdefghijklmnopqrstuvwxyz".includes(text[i])){
+			var codeForFont = 0x1D41A;
+			var subtract = 97;
+			var isLetter = true;
+		} else if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(text[i])){
+			var codeForFont = 0x1D400;
+			var subtract = 65;
+			var isLetter = true;
+		} else {
+			var isLetter = false;
+		}
+
+		if (isLetter){
 			let asciiCode = text.codePointAt(i);
 			console.log("ascii:", asciiCode);
 
-			let codeForFont = 0x1D41A;
-			let letterNumber = parseInt(codeForFont, 10) + (asciiCode - 97);
+			let letterNumber = parseInt(codeForFont, 10) + (asciiCode - subtract);
 			console.log("letterNumber: ", letterNumber);
 
 			let unicodeOfLetter = "0x" + letterNumber.toString(16);
@@ -55,15 +66,9 @@ client.on("connected", () => console.log("connected"));
 client.on("message", (channel, user, message, self) => {
 	
 	if(self){ return };
-
-	// if (user.mod){
-	// 	client.unmod(channel, "failtowinpro").catch(error => console.log(error));
-	// } else {
-	// 	client.mod(channel, "failtowinpro").catch(error => console.log(error));
-	// }
 	
-	if(message.substring(0, 10).toLowerCase() === "!nomention"){
-		client.say(channel, convertText(message.substring(11, message.length)))
+	if(message.substring(0, 9).toLowerCase() === "!makebold"){
+		client.say(channel, convertText(message.substring(10, message.length)))
 	}
 
 });
