@@ -22,12 +22,6 @@ const options = {
 const client = new tmi.client(options);
 client.connect().catch(console.error);
 
-//Database management
-const mongoose = require("mongoose");
-const Gold = require("./gold.js")
-const dbURL = process.env.DATABASE_URL;
-mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true });
-
 //Takes a message and splits it into the command given and the actual text to change 
 const splitText = (message) => {
 	let command = message.split(" ")[0].toLowerCase();
