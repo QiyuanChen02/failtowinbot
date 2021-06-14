@@ -1,5 +1,8 @@
+//Getting environmental variables
+require("dotenv").config();
+
 //Getting the tmi module and setting it up
-const tmi = require('tmi.js');
+const tmi = require("tmi.js");
 
 const options = {
 	options: { 
@@ -10,14 +13,20 @@ const options = {
 		secure: true
 	},
 	identity: {
-		username: "failtowinbot",
-		password: "oauth:15y6lj6hq4sr1h5zsfgnaebdarn0h6"
+		username: process.env.TWITCH_BOT_USERNAME,
+		password: process.env.TWITCH_OAUTH_TOKEN
 	},
 	channels: [ "failtowinbot", "failtowinpro" ]
 };
 
 const client = new tmi.client(options);
 client.connect().catch(console.error);
+
+//Database management
+const mongoose = require("mongoose");
+const Gold = require("./gold.js")
+const dbURL = process.env.DATABASE_URL;
+mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //Takes a message and splits it into the command given and the actual text to change 
 const splitText = (message) => {
@@ -73,6 +82,29 @@ const convertText = (text, type) => {
 	return changedText;
 }
 
+// const getGold = async (username) => {
+// 	Gold.find().then(result => {
+// 		// console.log("result: ", result);
+// 		result.forEach(person => {
+// 			//console.log("User", person.user);
+// 			//console.log("Username", username);
+// 			if (username === person.user){
+// 				Gold.findByIdAndDelete(person._id)
+// 				.then(result => console.log(result))
+// 				.catch(err => console.log(err));
+// 				return person.goldAmount;
+// 			}
+// 		});
+// 		return 0;
+// 	}).catch(err => console.log(err));
+// }
+
+// const saveGold = (username, goldAmount) => {
+// 	gold = new Gold({ user: username, goldAmount: goldAmount });
+// 	gold.save().then(result => console.log("I've reached it", result))
+// 	.catch(err => console.log("error saving gold"));
+// }
+
 //Running the bot
 client.on("connected", () => console.log("connected"));
 client.on("message", (channel, user, message, self) => {
@@ -100,6 +132,13 @@ client.on("message", (channel, user, message, self) => {
 			break;
 		case "!font4":
 			client.say(channel, convertText(text, "monospace"));
-			break;		
+			break;
+		// case "!gold":
+		// 	let amountGold = getGold(user.username);
+		// 	console.log(amountGold);
+		// 	amountGold += 1;
+		// 	client.say(channel, "hello");
+		// 	saveGold(user.username, amountGold);
+		// 	break;
 	}	
 });
