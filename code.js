@@ -82,29 +82,6 @@ const convertText = (text, type) => {
 	return changedText;
 }
 
-// const getGold = async (username) => {
-// 	Gold.find().then(result => {
-// 		// console.log("result: ", result);
-// 		result.forEach(person => {
-// 			//console.log("User", person.user);
-// 			//console.log("Username", username);
-// 			if (username === person.user){
-// 				Gold.findByIdAndDelete(person._id)
-// 				.then(result => console.log(result))
-// 				.catch(err => console.log(err));
-// 				return person.goldAmount;
-// 			}
-// 		});
-// 		return 0;
-// 	}).catch(err => console.log(err));
-// }
-
-// const saveGold = (username, goldAmount) => {
-// 	gold = new Gold({ user: username, goldAmount: goldAmount });
-// 	gold.save().then(result => console.log("I've reached it", result))
-// 	.catch(err => console.log("error saving gold"));
-// }
-
 //Running the bot
 client.on("connected", () => console.log("connected"));
 client.on("message", (channel, user, message, self) => {
@@ -133,12 +110,5 @@ client.on("message", (channel, user, message, self) => {
 		case "!font4":
 			client.say(channel, convertText(text, "monospace"));
 			break;
-		// case "!gold":
-		// 	let amountGold = getGold(user.username);
-		// 	console.log(amountGold);
-		// 	amountGold += 1;
-		// 	client.say(channel, "hello");
-		// 	saveGold(user.username, amountGold);
-		// 	break;
 	}	
 });
