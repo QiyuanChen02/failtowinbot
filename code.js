@@ -104,5 +104,7 @@ client.on("message", (channel, user, message, self) => {
 		case "!font4":
 			client.say(channel, convertText(text, "monospace"));
 			break;
+		case "!trivia":
+			
 	}	
 });
