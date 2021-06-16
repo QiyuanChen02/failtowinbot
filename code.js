@@ -13,7 +13,7 @@ client.on("message", (channel, user, message, self) => {
 
 	if(self){ return };
 
-	const regexpCommand = /^(\^\w+)?(?:\W+)?(.+)?/;
+	const regexpCommand = /^(\!\w+)?(?:\W+)?(.+)?/;
 	let [raw, command, text] = message.match(regexpCommand);
 	text = text || "";
 
