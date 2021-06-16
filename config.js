@@ -1,4 +1,5 @@
 //Setting tmi module up
+const tmi = require("tmi.js");
 const options = {
 	options: { 
 		debug: false, 
@@ -14,4 +15,6 @@ const options = {
 	channels: [ "failtowinbot", "failtowinpro" ]
 };
 
-module.exports = options;
+const client = new tmi.client(options);
+
+module.exports = client;
