@@ -19,9 +19,22 @@ const fetchData = () => {
 
 //Global variables
 let questionList = fetchData();
-let channelsTriviaStarted = [];
+let triviaData = [];
 let q;
 let timer;
+
+const channelIndex = (triviaData, channel) => {
+	if (triviaData.length === 0){
+		return undefined;
+	} else {
+		triviaData.forEach((c, index) => {
+			if (c.channelName === channel){
+				return index;
+			}
+		});
+		return undefined;
+	}
+}
 
 //Picks a random question from the list of questions
 const getQuestion = () => {
@@ -29,13 +42,18 @@ const getQuestion = () => {
 	return questionList[questionNumber];
 }
 
+function Game(channel){
+	this.channelName = channel;
+	this.players = [];
+}
+
 const triviaGame = (channel, user, command, text) => {
 
-	let triviaStarted = false;
-	if (channelsTriviaStarted.includes(channel)){
-		triviaStarted = true;
-	}
-
+	let i = channelIndex(triviaData, channel);
+	let triviaStarted = true;
+	if (i === undefined){
+		triviaStarted = false;
+	} 
 	if (command === "!trivia" || triviaStarted){
 
 		if (command === "!trivia" && triviaStarted){
@@ -43,29 +61,30 @@ const triviaGame = (channel, user, command, text) => {
 		}
 
 		if (!triviaStarted){
+			const game = new Game(channel);
 			q = getQuestion(); 
-			client.say(channel, `${q.question} A. ${q.A}, B. ${q.B}, C. ${q.C}, D. ${q.D}`);
-			channelsTriviaStarted.push(channel);
+			client.say(channel, `${q.question} A. ${q.A}, B. ${q.B}, C. ${q.C}, D. ${q.D}. You have 10 seconds to answer the questions`);
+			triviaData.push(game);
 
 			timer = setTimeout(() => {
 				client.say(channel, `The trivia question has timed out...`);
-				channelsTriviaStarted = channelsTriviaStarted.filter(channelName => channelName != channel);
-			}, 30000);
+				console.log(triviaData[0].players);
+				triviaData = triviaData.filter(c => channel != c.channelName);
+			}, 10000);
 		}
 
-		if (triviaStarted && ["A", "B", "C", "D"].includes(text.toUpperCase())){
-			
-			if (text.toUpperCase() === q.answer){
-				client.say(channel, `Congrats ${user.username}, you got the question correct!`);
-	
-			} else {
-				client.say(channel, `Incorrect! The correct answer is ${q.answer}`);
-			}
-
-			channelsTriviaStarted = channelsTriviaStarted.filter(channelName => channelName != channel);
-			clearTimeout(timer);
+		if (triviaStarted && text.toUpperCase() === q.answer){
+			console.log("hello");
+			triviaData[i].players.append(user.username);
 		}
 	}
 }
 
 module.exports = triviaGame;
+
+// class Player{
+// 	constructor(username, answer){
+// 		this.username = username;
+// 		this.answer = answer;
+// 	}
+// }
