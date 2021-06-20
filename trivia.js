@@ -3,18 +3,22 @@ const fetch = require("node-fetch");
 const client = require("./config.js");
 
 //Fetching quiz data
-let questionList = [];
-fetch("https://jsonkeeper.com/b/4KEW")
-.then(res => res.json())
-.then(data => {
-    console.log("Question list received");
-	data.questions.forEach(question => {
-		questionList.push(question);
-	});
-})
-.catch(err => console.log(err));
+const fetchData = () => {
+	let data = [];
+	fetch("https://jsonkeeper.com/b/4KEW")
+	.then(res => res.json())
+	.then(data => {
+		console.log("Question list received");
+		data.questions.forEach(question => {
+			questionList.push(question);
+		});
+	})
+	.catch(err => console.log(err));
+	return data;
+}
 
 //Global variables
+let questionList = fetchData();
 let channelsTriviaStarted = [];
 let q;
 let timer;

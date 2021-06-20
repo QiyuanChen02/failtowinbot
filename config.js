@@ -1,4 +1,5 @@
 //Setting tmi module up
+require("dotenv").config();
 const tmi = require("tmi.js");
 const options = {
 	options: { 

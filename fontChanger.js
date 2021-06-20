@@ -1,3 +1,5 @@
+const client = require("./config.js");
+
 //Function to turn text into ascii letters
 const convertText = (text, type) => {
 
@@ -49,4 +51,21 @@ const convertText = (text, type) => {
 	return changedText;
 }
 
-module.exports = convertText;
+const changeFont = (channel, user, command, text) => {
+	switch (command){
+		case "!font1":
+			client.say(channel, convertText(text, "bold"));
+			break;
+		case "!font2":
+			client.say(channel, convertText(text, "sans-serif"));
+			break;
+		case "!font3":
+			client.say(channel, convertText(text, "sans-serif-bold"));
+			break;
+		case "!font4":
+			client.say(channel, convertText(text, "monospace"));
+			break;
+	}
+}
+
+module.exports = changeFont;
