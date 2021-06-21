@@ -13,7 +13,7 @@ const options = {
 		username: process.env.TWITCH_BOT_USERNAME,
 		password: process.env.TWITCH_OAUTH_TOKEN
 	},
-	channels: [ "failtowinbot", "failtowinpro", "erminnemir" ]
+	channels: [ "failtowinbot", "failtowinpro", "chubbehmouse" ]
 };
 
 const client = new tmi.client(options);
