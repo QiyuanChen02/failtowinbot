@@ -4,7 +4,7 @@ const client = require("./config.js");
 
 //Fetching quiz data
 const fetchData = () => {
-	let data = [];
+	let questionList = [];
 	fetch("https://jsonkeeper.com/b/4KEW")
 	.then(res => res.json())
 	.then(data => {
@@ -14,26 +14,24 @@ const fetchData = () => {
 		});
 	})
 	.catch(err => console.log(err));
-	return data;
+	return questionList;
 }
 
 //Global variables
 let questionList = fetchData();
 let triviaData = [];
-let q;
 let timer;
 
-const channelIndex = (triviaData, channel) => {
-	if (triviaData.length === 0){
-		return undefined;
-	} else {
-		triviaData.forEach((c, index) => {
-			if (c.channelName === channel){
-				return index;
-			}
-		});
-		return undefined;
-	}
+//Tests whether or not the channel has started a trivia
+const hasStarted = (triviaData, channel) => {
+
+	let started = false;
+	triviaData.forEach((c, index) => {
+		if (c.channelName === channel){
+			started = true;
+		}
+	});
+	return started;
 }
 
 //Picks a random question from the list of questions
@@ -42,49 +40,63 @@ const getQuestion = () => {
 	return questionList[questionNumber];
 }
 
-function Game(channel){
-	this.channelName = channel;
-	this.players = [];
+//Creates the game object
+class Game {
+	constructor(channel, question) {
+		this.channelName = channel;
+		this.correctPlayers = [];
+		this.allPlayers = [];
+		this.question = question;
+	}
 }
 
 const triviaGame = (channel, user, command, text) => {
 
-	let i = channelIndex(triviaData, channel);
-	let triviaStarted = true;
-	if (i === undefined){
-		triviaStarted = false;
-	} 
-	if (command === "!trivia" || triviaStarted){
+	let triviaStarted = hasStarted(triviaData, channel);
 
-		if (command === "!trivia" && triviaStarted){
-			client.say(channel, "A trivia is currently taking place!");
-		}
+	if (command === "!quiz" || triviaStarted){
+
+		let channelIndex = triviaData.findIndex(object => object.channelName === channel);
 
 		if (!triviaStarted){
-			const game = new Game(channel);
-			q = getQuestion(); 
-			client.say(channel, `${q.question} A. ${q.A}, B. ${q.B}, C. ${q.C}, D. ${q.D}. You have 10 seconds to answer the questions`);
+			let q = getQuestion(); 
+			client.say(channel, `${q.question} A. ${q.A}, B. ${q.B}, C. ${q.C}, D. ${q.D}. The answers will be revealed in 15 seconds.`);
+			const game = new Game(channel, q);
 			triviaData.push(game);
 
 			timer = setTimeout(() => {
-				client.say(channel, `The trivia question has timed out...`);
-				console.log(triviaData[0].players);
-				triviaData = triviaData.filter(c => channel != c.channelName);
-			}, 10000);
+				triviaData.forEach((obj, i) => {
+					if (obj.channelName === channel){
+						if (obj.correctPlayers.length >= 2){
+							const displayedPlayers = obj.correctPlayers.join(", ").replace(/, (\w+)$/, " and $1");
+							client.say(channel, `The correct answer is ${q.answer}. Well done ${displayedPlayers} for getting the correct answer!`);
+						} else if (obj.correctPlayers.length === 1){
+							client.say(channel, `The correct answer is ${q.answer}. Well done ${obj.correctPlayers[0]} for getting the correct answer!`);
+						} else {
+							client.say(channel, `The correct answer is ${q.answer}. Nobody got the answer correct!`);
+						}
+						triviaData.splice(i, 1);
+					}
+				});
+			}, 15000);
 		}
 
-		if (triviaStarted && text.toUpperCase() === q.answer){
-			console.log("hello");
-			triviaData[i].players.append(user.username);
+		if (triviaStarted && ["A", "B", "C", "D"].includes(text.toUpperCase())){
+
+			let hasAnswered = false;
+			if (triviaData[channelIndex].allPlayers.includes(user.username)){
+				hasAnswered = true;
+			} else {
+				triviaData[channelIndex].allPlayers.push(user.username);
+			}
+
+			if (hasAnswered){
+				client.say(channel, `${user.username}, you have already given an answer to this question!`);
+			} else if (text.toUpperCase() === triviaData[channelIndex].question.answer){
+				triviaData[channelIndex].correctPlayers.push(user.username);
+			}
 		}
 	}
 }
 
 module.exports = triviaGame;
-
-// class Player{
-// 	constructor(username, answer){
-// 		this.username = username;
-// 		this.answer = answer;
-// 	}
-// }
