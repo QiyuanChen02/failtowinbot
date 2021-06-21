@@ -12,12 +12,25 @@ client.on("message", (channel, user, message, self) => {
 
 	if(self){ return };
 
-	const regexpCommand = /^(\!\w+)?(?:\W+)?(.+)?/;
+	const regexpCommand = /^(\!\w+)?(?: +)?(.+)?/;
 	let [, command, text] = message.match(regexpCommand);
 	text = text || "";
 
 	changeFont(channel, user, command, text);
 	triviaGame(channel, user, command, text);
 
+	if (command === "!dice"){
+
+		if (text === ""){
+			text = "6";
+		}
+		if (parseFloat(text) > 0 && Number.isInteger(parseFloat(text))){
+			randomNumber = Math.floor(Math.random() * parseInt(text)) + 1;
+			client.say(channel, randomNumber.toString());
+		} else {
+			client.say(channel, "That is not a valid number for a dice.")
+		}
+		
+	}
 
 });
