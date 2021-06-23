@@ -1,6 +1,6 @@
 //Getting modules
 const client = require("./config.js");
-const triviaGame = require("./trivia.js");
+const quizQuestion = require("./quizQuestion.js");
 const changeFont = require("./fontChanger.js");
 
 //Setting up
@@ -17,7 +17,8 @@ client.on("message", (channel, user, message, self) => {
 	text = text || "";
 
 	changeFont(channel, user, command, text);
-	triviaGame(channel, user, command, text);
+	quizQuestion(channel, user, command, text).then(data => console.log(data));
+	;
 
 	if (command === "!dice"){
 
@@ -30,7 +31,5 @@ client.on("message", (channel, user, message, self) => {
 		} else {
 			client.say(channel, "That is not a valid number for a dice.")
 		}
-		
 	}
-
 });
