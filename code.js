@@ -1,6 +1,6 @@
 //Getting modules
 const client = require("./config.js");
-const quizQuestion = require("./quizQuestion.js");
+const { giveQuiz } = require("./quizQuestion.js");
 const changeFont = require("./fontChanger.js");
 
 //Setting up
@@ -17,8 +17,7 @@ client.on("message", (channel, user, message, self) => {
 	text = text || "";
 
 	changeFont(channel, user, command, text);
-	quizQuestion(channel, user, command, text).then(data => console.log(data));
-	;
+	giveQuiz(channel, user, command, text);
 
 	if (command === "!dice"){
 
@@ -29,7 +28,7 @@ client.on("message", (channel, user, message, self) => {
 			randomNumber = Math.floor(Math.random() * parseInt(text)) + 1;
 			client.say(channel, randomNumber.toString());
 		} else {
-			client.say(channel, "That is not a valid number for a dice.")
+			client.say(channel, "That is not a valid number for a dice.");
 		}
 	}
 });

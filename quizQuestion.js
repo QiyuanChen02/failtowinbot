@@ -19,14 +19,15 @@ const fetchData = () => {
 
 //Global variables
 let questionList = fetchData();
-let triviaData = [];
-let gameData = [];
+let quizData = [];
+let roundData = [];
+let fullQuizStarted = false;
 
 //Tests whether or not the channel has started a trivia
-const hasStarted = (triviaData, channel) => {
+const hasStarted = (data, channel) => {
 
 	let started = false;
-	triviaData.forEach((c, index) => {
+	data.forEach(c => {
 		if (c.channelName === channel){
 			started = true;
 		}
@@ -47,83 +48,157 @@ class Round {
 		this.correctPlayers = [];
 		this.allPlayers = [];
 		this.question = question;
-		this.roundFinished = false;
+	}
+
+	checkAnswer(user, text, channel){
+		let hasAnswered = false;
+		if (this.allPlayers.includes(user.username)){
+			hasAnswered = true;
+		} else {
+			this.allPlayers.push(user.username);
+		}
+
+		if (hasAnswered){
+			client.say(channel, `${user.username}, you have already given an answer to this question!`);
+		} else if (text.toUpperCase() === this.question.answer){
+			this.correctPlayers.push(user.username);
+		}
+	}
+
+	displayAnswers(q, channel){
+		if (this.correctPlayers.length >= 2){
+			const displayedPlayers = this.correctPlayers.join(", ").replace(/, (\w+)$/, " and $1");
+			client.say(channel, `The correct answer is ${q.answer}. Well done ${displayedPlayers} for getting the correct answer!`);
+		} else if (this.correctPlayers.length === 1){
+			client.say(channel, `The correct answer is ${q.answer}. Well done ${this.correctPlayers[0]} for getting the correct answer!`);
+		} else {
+			client.say(channel, `The correct answer is ${q.answer}. Nobody got the answer correct!`);
+		}
 	}
 }
 
-const endQuestion = (channel) => {
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			triviaData.forEach((obj, i) => {
-				if (obj.channelName === channel){
-					resolve(obj);
-					if (obj.correctPlayers.length >= 2){
-						const displayedPlayers = obj.correctPlayers.join(", ").replace(/, (\w+)$/, " and $1");
-						client.say(channel, `The correct answer is ${q.answer}. Well done ${displayedPlayers} for getting the correct answer!`);
-					} else if (obj.correctPlayers.length === 1){
-						client.say(channel, `The correct answer is ${q.answer}. Well done ${obj.correctPlayers[0]} for getting the correct answer!`);
-					} else {
-						client.say(channel, `The correct answer is ${q.answer}. Nobody got the answer correct!`);
-					}
-					triviaData.splice(i, 1);
+class Quiz {
+	constructor(channel) {
+		this.channelName = channel;
+		this.players = [];
+		this.playerData = [];
+		this.lastRound = {};
+	}
+
+	updateScores(){
+		
+		this.lastRound.allPlayers.forEach(player => {
+			if (!this.players.includes(player)){
+				this.players.push(player);
+				this.playerData.push({ username: player, score: 0 });
+			}
+		});
+
+		this.lastRound.correctPlayers.forEach((player, i) => {
+			this.playerData.forEach((user, j) => {
+
+				if (user.username === player){
+					this.playerData[j].score += Math.round(100 * (0.8 ** i));
 				}
 			});
-		}, 15000);
-	})	
+		});
+	}
+
+	displayScores(channel){
+		const dataToDisplay = this.playerData.map(person => person.username + " " + person.score).join(", ");
+		setTimeout(() => {
+			client.say(channel, `Current scores: ${dataToDisplay}`)
+		}, 3000);
+		
+	}
 }
 
 const quizQuestion = (channel, user, command, text) => {
 
-	let triviaStarted = hasStarted(triviaData, channel);
+	let questionStarted = hasStarted(roundData, channel);
+	//console.log(roundData);
+	if (command === "!quizquestion" || questionStarted){
 
-	if (command === "!quizquestion" || triviaStarted){
-
-		if (command === "!quizquestion" && triviaStarted){
+		if (command === "!quizquestion" && questionStarted){
 			client.say(channel, "A quiz is already taking place!");
 		}
 
-		let channelIndex = triviaData.findIndex(object => object.channelName === channel);
+		let channelIndex = roundData.findIndex(object => object.channelName === channel);
 
-		if (!triviaStarted){
+		if (!questionStarted){
 			let q = getQuestion(); 
 			client.say(channel, `${q.question} A. ${q.A}, B. ${q.B}, C. ${q.C}, D. ${q.D}. The answers will be revealed in 15 seconds.`);
-			const game = new Round(channel, q);
-			triviaData.push(game);
+			roundData.push(new Round(channel, q));
 
-			return endQuestion(channel);
-			// setTimeout(() => {
-			// 	triviaData.forEach((obj, i) => {
-			// 		if (obj.channelName === channel){
-			// 			if (obj.correctPlayers.length >= 2){
-			// 				const displayedPlayers = obj.correctPlayers.join(", ").replace(/, (\w+)$/, " and $1");
-			// 				client.say(channel, `The correct answer is ${q.answer}. Well done ${displayedPlayers} for getting the correct answer!`);
-			// 			} else if (obj.correctPlayers.length === 1){
-			// 				client.say(channel, `The correct answer is ${q.answer}. Well done ${obj.correctPlayers[0]} for getting the correct answer!`);
-			// 			} else {
-			// 				client.say(channel, `The correct answer is ${q.answer}. Nobody got the answer correct!`);
-			// 			}
-			// 			triviaData.splice(i, 1);
-			// 		}
-			// 	});
-			// }, 15000);
+			setTimeout(() => {
+				roundData.forEach((obj, i) => {
+					if (obj.channelName === channel){
+
+						obj.displayAnswers(q, channel);
+						roundData.splice(i, 1);
+						if (fullQuizStarted){
+							quizData.forEach((object, j) => {
+								if (object.channelName === channel){
+									quizData[j].lastRound = obj;
+									quizData[j].updateScores();
+									quizData[j].displayScores(channel);
+								}
+							});
+						}
+					}
+				});
+			}, 15000);
 		}
 
-		if (triviaStarted && ["A", "B", "C", "D"].includes(text.toUpperCase())){
-
-			let hasAnswered = false;
-			if (triviaData[channelIndex].allPlayers.includes(user.username)){
-				hasAnswered = true;
-			} else {
-				triviaData[channelIndex].allPlayers.push(user.username);
-			}
-
-			if (hasAnswered){
-				client.say(channel, `${user.username}, you have already given an answer to this question!`);
-			} else if (text.toUpperCase() === triviaData[channelIndex].question.answer){
-				triviaData[channelIndex].correctPlayers.push(user.username);
-			}
+		if (questionStarted && ["A", "B", "C", "D"].includes(text.toUpperCase())){
+			roundData[channelIndex].checkAnswer(user, text, channel);
 		}
 	}
 }
 
-module.exports = quizQuestion;
+const giveQuiz = (channel, user, command, text) => {
+	
+	//Fix this code so that it looks a lot nicer !!!
+
+	let questionStarted = hasStarted(roundData, channel);
+	if (questionStarted){
+		quizQuestion(channel, user, command, text);
+	}
+
+	if (command === "!quizquestion" && !fullQuizStarted){
+		quizQuestion(channel, user, "!quizquestion", "");
+	}
+
+	if (command === "!quiz" && text === "help"){
+		client.say(channel, "There will be 10 questions. For each question, pick one of the 4 choices A, B, C or D. If your answer is correct, your score increases depending on how fast you answered compared to everyone else. The person at the end with the greatest score wins. Good luck");
+	}
+
+	if (command === "!quiz" && !fullQuizStarted){
+		
+		fullQuizStarted = true;
+		quizData.push(new Quiz(channel));
+
+		client.say(channel, "The quiz will start in 10 seconds. Type '!quiz help' if you're unsure how to play.");
+		for (let i = 0; i <= 10; i++){
+			setTimeout(() => {
+				if (i != 10){
+					quizQuestion(channel, user, "!quizquestion", "");
+				}
+
+				if (i === 10){
+					fullQuizStarted = false;
+					quizData.forEach((obj, i) => {
+						if (obj.channelName === channel){
+							const dataToDisplay = obj.playerData.map(person => person.username + " " + person.score).join(", ");
+							client.say(channel, `The quiz has finished. Final scores: ${dataToDisplay}`)
+							quizData.splice(i, 1);
+						}
+					});
+				}
+				
+			}, i * 21000 + 10000);
+		}
+	}
+}
+
+module.exports = { giveQuiz };
