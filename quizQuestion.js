@@ -109,14 +109,12 @@ class Quiz {
 		setTimeout(() => {
 			client.say(channel, `Current scores: ${dataToDisplay}`)
 		}, 3000);
-		
 	}
 }
 
 const quizQuestion = (channel, user, command, text) => {
 
 	let questionStarted = hasStarted(roundData, channel);
-	//console.log(roundData);
 	if (command === "!quizquestion" || questionStarted){
 
 		if (command === "!quizquestion" && questionStarted){
@@ -157,17 +155,6 @@ const quizQuestion = (channel, user, command, text) => {
 }
 
 const giveQuiz = (channel, user, command, text) => {
-	
-	//Fix this code so that it looks a lot nicer !!!
-
-	let questionStarted = hasStarted(roundData, channel);
-	if (questionStarted){
-		quizQuestion(channel, user, command, text);
-	}
-
-	if (command === "!quizquestion" && !fullQuizStarted){
-		quizQuestion(channel, user, "!quizquestion", "");
-	}
 
 	if (command === "!quiz" && text === "help"){
 		client.say(channel, "There will be 10 questions. For each question, pick one of the 4 choices A, B, C or D. If your answer is correct, your score increases depending on how fast you answered compared to everyone else. The person at the end with the greatest score wins. Good luck");
@@ -201,4 +188,4 @@ const giveQuiz = (channel, user, command, text) => {
 	}
 }
 
-module.exports = { giveQuiz };
+module.exports = { giveQuiz, quizQuestion };
