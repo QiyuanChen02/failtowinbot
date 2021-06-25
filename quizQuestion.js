@@ -21,7 +21,6 @@ const fetchData = () => {
 let questionList = fetchData();
 let quizData = [];
 let roundData = [];
-let fullQuizStarted = false;
 
 //Tests whether or not the channel has started a trivia
 const hasStarted = (data, channel) => {
@@ -112,7 +111,7 @@ class Quiz {
 	}
 }
 
-const quizQuestion = (channel, user, command, text) => {
+const quizQuestion = (channel, user, command, text, fullQuizStarted = false) => {
 
 	let questionStarted = hasStarted(roundData, channel);
 	if (command === "!quizquestion" || questionStarted){
@@ -120,8 +119,6 @@ const quizQuestion = (channel, user, command, text) => {
 		if (command === "!quizquestion" && questionStarted){
 			client.say(channel, "A quiz is already taking place!");
 		}
-
-		let channelIndex = roundData.findIndex(object => object.channelName === channel);
 
 		if (!questionStarted){
 			let q = getQuestion(); 
@@ -148,32 +145,34 @@ const quizQuestion = (channel, user, command, text) => {
 			}, 15000);
 		}
 
+		let channelIndex = roundData.findIndex(object => object.channelName === channel);
 		if (questionStarted && ["A", "B", "C", "D"].includes(text.toUpperCase())){
 			roundData[channelIndex].checkAnswer(user, text, channel);
 		}
+		
 	}
+
 }
 
 const giveQuiz = (channel, user, command, text) => {
 
-	if (command === "!quiz" && text === "help"){
+	if (command === "!quizhelp"){
 		client.say(channel, "There will be 10 questions. For each question, pick one of the 4 choices A, B, C or D. If your answer is correct, your score increases depending on how fast you answered compared to everyone else. The person at the end with the greatest score wins. Good luck");
 	}
 
-	if (command === "!quiz" && !fullQuizStarted){
+	let fullQuizStarted = hasStarted(quizData, channel);
+	if (command === "!quiza" && !fullQuizStarted){
 		
-		fullQuizStarted = true;
 		quizData.push(new Quiz(channel));
 
-		client.say(channel, "The quiz will start in 10 seconds. Type '!quiz help' if you're unsure how to play.");
+		client.say(channel, "The quiz will start in 10 seconds. Type '!quizhelp' if you're unsure how to play.");
 		for (let i = 0; i <= 10; i++){
 			setTimeout(() => {
 				if (i != 10){
-					quizQuestion(channel, user, "!quizquestion", "");
+					quizQuestion(channel, user, "!quizquestion", "", true);
 				}
 
 				if (i === 10){
-					fullQuizStarted = false;
 					quizData.forEach((obj, i) => {
 						if (obj.channelName === channel){
 							const dataToDisplay = obj.playerData.map(person => person.username + " " + person.score).join(", ");
