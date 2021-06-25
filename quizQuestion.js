@@ -187,7 +187,7 @@ const giveQuiz = (channel, user, command, text) => {
 					});
 				}
 				
-			}, i * 21000 + 10000);
+			}, i * 21000 + 30000);
 		}
 	}
 }
