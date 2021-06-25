@@ -5,7 +5,7 @@ const client = require("./config.js");
 //Fetching quiz data
 const fetchData = () => {
 	let questionList = [];
-	fetch("https://jsonkeeper.com/b/4KEW")
+	fetch("https://jsonkeeper.com/b/TP83")
 	.then(res => res.json())
 	.then(data => {
 		console.log("Question list received");
