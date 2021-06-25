@@ -165,6 +165,7 @@ const giveQuiz = (channel, user, command, text) => {
 
 		client.say(channel, "This quiz is about to start. There will be 10 questions. Type '!quizhelp' if you're unsure how to play.");
 
+		let noQuestions = 10;
 		for (let i = 0; i <= noQuestions; i++){
 			setTimeout(() => {
 				if (i != noQuestions){
