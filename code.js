@@ -1,7 +1,7 @@
 //Getting modules
 const client = require("./config.js");
 const { giveQuiz, quizQuestion } = require("./quizQuestion.js");
-const changeFont = require("./fontChanger.js");
+const { changeFont } = require("./fontChanger.js");
 
 //Setting up
 client.connect().catch(console.error);

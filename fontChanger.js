@@ -68,4 +68,4 @@ const changeFont = (channel, user, command, text) => {
 	}
 }
 
-module.exports = changeFont;
+module.exports = { changeFont, convertText };

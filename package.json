@@ -5,8 +5,6 @@
   "main": "code.js",
   "dependencies": {
     "dotenv": "^10.0.0",
-    "mongoose": "^5.12.13",
-    "node-fetch": "^2.6.1",
     "tmi.js": "^1.8.3"
   },
   "devDependencies": {},

@@ -1,19 +1,22 @@
 "use strict"
-const fetch = require("node-fetch");
+const fs = require("fs");
 const client = require("./config.js");
+const { convertText } = require("./fontChanger.js");
 
 //Fetching quiz data
 const fetchData = () => {
 	let questionList = [];
-	fetch("https://jsonkeeper.com/b/TP83")
-	.then(res => res.json())
-	.then(data => {
-		console.log("Question list received");
-		data.questions.forEach(question => {
-			questionList.push(question);
-		});
-	})
-	.catch(err => console.log(err));
+	fs.readFile("./quiz-questions.json", "utf8", (err, data) => {
+		if (err) {
+			console.log("There was an error getting the file :(");
+		} else {
+			console.log("Question list received");
+			const parsedData = JSON.parse(data);
+			parsedData.questions.forEach(question => {
+				questionList.push(question);
+			});
+		}
+	});
 	return questionList;
 }
 
@@ -51,16 +54,16 @@ class Round {
 
 	checkAnswer(user, text, channel){
 		let hasAnswered = false;
-		if (this.allPlayers.includes(user.username)){
+		if (this.allPlayers.includes(convertText(user.username, "sans-serif"))){
 			hasAnswered = true;
 		} else {
-			this.allPlayers.push(user.username);
+			this.allPlayers.push(convertText(user.username, "sans-serif"));
 		}
 
 		if (hasAnswered){
-			client.say(channel, `${user.username}, you have already given an answer to this question!`);
+			client.say(channel, `${convertText(user.username, "sans-serif")}, you have already given an answer to this question!`);
 		} else if (text.toUpperCase() === this.question.answer){
-			this.correctPlayers.push(user.username);
+			this.correctPlayers.push(convertText(user.username, "sans-serif"));
 		}
 	}
 
@@ -76,6 +79,7 @@ class Round {
 	}
 }
 
+//Creates the quiz object
 class Quiz {
 	constructor(channel) {
 		this.channelName = channel;
@@ -96,7 +100,7 @@ class Quiz {
 		this.lastRound.correctPlayers.forEach((player, i) => {
 			this.playerData.forEach((user, j) => {
 
-				if (user.username === player){
+				if (convertText(user.username, "sans-serif") === player){
 					this.playerData[j].score += Math.round(100 * (0.8 ** i));
 				}
 			});
@@ -163,7 +167,7 @@ const giveQuiz = (channel, user, command, text) => {
 		
 		quizData.push(new Quiz(channel));
 
-		client.say(channel, "This quiz is about to start. There will be 10 questions. Type '!quizhelp' if you're unsure how to play.");
+		client.say(channel, "A quiz is about to start. There will be 10 questions. Type '!quizhelp' if you're unsure how to play.");
 
 		let noQuestions = 10;
 		for (let i = 0; i <= noQuestions; i++){

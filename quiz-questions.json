@@ -57,14 +57,6 @@
       "answer": "B"
     },
     {
-      "question": "According to a famous line from the existentialist play 'No Exit' what is hell?",
-      "A": "oneself",
-      "B": "other people",
-      "C": "little made large",
-      "D": "hued in green and blue",
-      "answer": "B"
-    },
-    {
       "question": "According to a popular slogan, what state should people not 'mess with'?",
       "A": "New York",
       "B": "Texas",
@@ -369,28 +361,12 @@
       "answer": "B"
     },
     {
-      "question": "Gerry Adams is the president of what organization?",
-      "A": "Greenpeace",
-      "B": "NASCAR",
-      "C": "Sinn Fein",
-      "D": "PLO",
-      "answer": "C"
-    },
-    {
       "question": "Girls of what religious community traditionally wear bonnets?",
       "A": "Amish",
       "B": "Sikh",
       "C": "Roman Catholic",
       "D": "Christian",
       "answer": "A"
-    },
-    {
-      "question": "How are actors Charlie Sheen and Emilio Estevez related?",
-      "A": "they're cousins",
-      "B": "they're brothers",
-      "C": "they're father and son",
-      "D": "they're uncle and nephew",
-      "answer": "B"
     },
     {
       "question": "How do you express 3/4 as a decimal?",
@@ -415,14 +391,6 @@
       "C": "I",
       "D": "ii",
       "answer": "A"
-    },
-    {
-      "question": "How is the word 'ambulance' normally written on the front of American ambulances?",
-      "A": "in French",
-      "B": "in reverse",
-      "C": "in braille",
-      "D": "in gibberish",
-      "answer": "B"
     },
     {
       "question": "How long is a single term in the US Senate?",
@@ -687,14 +655,6 @@
       "C": "Atlantis",
       "D": "North Pole",
       "answer": "D"
-    },
-    {
-      "question": "In 1926, the Harlem Globetrotters basketball team was formed in what city?",
-      "A": "Boston",
-      "B": "Philadelphia",
-      "C": "Chicago",
-      "D": "New York City",
-      "answer": "C"
     },
     {
       "question": "In 1960, Nazi official Adolph Eichmann was finally captured in what country?",
@@ -1233,14 +1193,6 @@
       "answer": "C"
     },
     {
-      "question": "'Nature, Mr. Allnut, is what we are put in this world to rise above' is a line from what film?",
-      "A": "'Citizen Kane'",
-      "B": "'The African Queen'",
-      "C": "'The Deer Hunter'",
-      "D": "'Adam's Rib'",
-      "answer": "B"
-    },
-    {
       "question": "On a set of jumper cables, what color designates the negative connector?",
       "A": "black",
       "B": "red",
@@ -1255,22 +1207,6 @@
       "C": "12 hours, 25 minutes",
       "D": "24 hours, 25 minutes",
       "answer": "C"
-    },
-    {
-      "question": "On the TV show 'CHiPs' what was Officer Frank Poncherello's nickname?",
-      "A": "Franky",
-      "B": "Ponch",
-      "C": "Chipper",
-      "D": "Hot Dog",
-      "answer": "B"
-    },
-    {
-      "question": "On the TV show 'Hill Street Blues' what is Joyce Davenport's nickname for Captain Frank Furillo?",
-      "A": "Furry Monster",
-      "B": "Pizza Man",
-      "C": "Snookums",
-      "D": "Baby Cakes",
-      "answer": "B"
     },
     {
       "question": "On TV's 'Seinfeld' what type of doctor did Mr. Costanza go to when he sat on 'fusilli Jerry'?",
@@ -1601,14 +1537,6 @@
       "answer": "B"
     },
     {
-      "question": "What are the Smothers Brothers' first names?",
-      "A": "Frank and Bill",
-      "B": "Tom and Dick",
-      "C": "Dave and George",
-      "D": "Ed and Pete",
-      "answer": "B"
-    },
-    {
       "question": "What article of clothing best describes a 'pashmina'?",
       "A": "shoes",
       "B": "pants",
@@ -1718,22 +1646,6 @@
       "B": "purple",
       "C": "blue",
       "D": "brown",
-      "answer": "C"
-    },
-    {
-      "question": "What color is the masthead of USA Today's 'Life' section?",
-      "A": "green",
-      "B": "purple",
-      "C": "red",
-      "D": "blue",
-      "answer": "B"
-    },
-    {
-      "question": "What color is Uncle Sam's goatee?",
-      "A": "brown",
-      "B": "black ",
-      "C": "white",
-      "D": "dishwater blond",
       "answer": "C"
     },
     {
@@ -2289,22 +2201,6 @@
       "answer": "B"
     },
     {
-      "question": "What is the name of Raggedy Ann's doll brother?",
-      "A": "Red",
-      "B": "Freckles",
-      "C": "Randy",
-      "D": "Andy",
-      "answer": "D"
-    },
-    {
-      "question": "What is the name of the baby who appears in cartoons and comic strips with Popeye the Sailor?",
-      "A": "Pun'kin",
-      "B": "Lamikins",
-      "C": "Suga'baby",
-      "D": "Swee'pea",
-      "answer": "D"
-    },
-    {
       "question": "What is the name of the character Played by Woody Allen in the 1967 James Bond film 'Casino Royale'?",
       "A": "Dr. Evil",
       "B": "Q",
@@ -2673,30 +2569,6 @@
       "answer": "C"
     },
     {
-      "question": "What place is named in the title of the 1979 live album by rock legends Cheap Trick?",
-      "A": "Budapest",
-      "B": "Budokan",
-      "C": "Bhutan",
-      "D": "Britain",
-      "answer": "B"
-    },
-    {
-      "question": "What popular toy is featured in the film 'The Hudsucker Proxy'?",
-      "A": "Beanie Babies",
-      "B": "Hula Hoop",
-      "C": "Lincoln Logs",
-      "D": "Lite Brite",
-      "answer": "B"
-    },
-    {
-      "question": "What pro wrestler grapples with Sylvester Stallone in the movie 'Rocky III'?",
-      "A": "Dolph Lundgren",
-      "B": "Hulk Hogan",
-      "C": "Andre the Giant",
-      "D": "The Iron Sheik",
-      "answer": "B"
-    },
-    {
       "question": "What professional sports team plays its home games in the Alamodome?",
       "A": "New York Jets",
       "B": "Detroit Tigers",
@@ -2847,14 +2719,6 @@
       "C": "wood",
       "D": "glass",
       "answer": "B"
-    },
-    {
-      "question": "What U.S. president is mentioned by name in the opening theme song of TV's 'All in the Family'?",
-      "A": "Calvin Coolidge",
-      "B": "Harry Truman",
-      "C": "Herbert Hoover",
-      "D": "Richard Nixon",
-      "answer": "C"
     },
     {
       "question": "What was Ludwig Van Beethoven's final symphony?",
@@ -3513,14 +3377,6 @@
       "answer": "B"
     },
     {
-      "question": "Which of these is a slang term for 'police'?",
-      "A": "fuzz",
-      "B": "shrinks",
-      "C": "bean counters",
-      "D": "aardvarks",
-      "answer": "A"
-    },
-    {
       "question": "Which of these is a type of artwork consisting of pieces of wood inlaid in geometric patterns?",
       "A": "marquetry",
       "B": "parquetry",
@@ -3711,14 +3567,6 @@
       "C": "Parliamentary",
       "D": "Legislative",
       "answer": "C"
-    },
-    {
-      "question": "Which of these is not the name of one of rock musician Frank Zappa's children?",
-      "A": "Dweezil",
-      "B": "Ahmet",
-      "C": "Moon Unit",
-      "D": "Lumpy Gravy",
-      "answer": "D"
     },
     {
       "question": "Which of these is referred to as a 'pigskin'?",
@@ -4185,14 +4033,6 @@
       "answer": "A"
     },
     {
-      "question": "Who sang lead vocals for the band Big Brother and the Holding Company?",
-      "A": "Grace Slick",
-      "B": "Janis Joplin",
-      "C": "Mama Cass",
-      "D": "Karen Carpenter",
-      "answer": "B"
-    },
-    {
       "question": "Who was Charlie McCarthy?",
       "A": "a U.S. senator",
       "B": "a Chicago gangster",
@@ -4271,14 +4111,6 @@
       "C": "Rhea",
       "D": "Hera",
       "answer": "C"
-    },
-    {
-      "question": "Who was the WNBA's Most Valuable Player of 1999?",
-      "A": "Rebecca Lobo",
-      "B": "Sheryl Swoopes",
-      "C": "Lisa Leslie",
-      "D": "Yolanda Griffith",
-      "answer": "D"
     },
     {
       "question": "Who were the Chicago Seven?",
