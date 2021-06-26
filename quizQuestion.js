@@ -21,9 +21,10 @@ const fetchData = () => {
 }
 
 //Global variables
-let questionList = fetchData();
-let quizData = [];
-let roundData = [];
+const questionList = fetchData();
+const quizData = [];
+const roundData = [];
+const timeouts = [];
 
 //Tests whether or not the channel has started a trivia
 const hasStarted = (data, channel) => {
@@ -62,14 +63,14 @@ class Round {
 
 		if (hasAnswered){
 			client.say(channel, `${convertText(user.username, "sans-serif")}, you have already given an answer to this question!`);
-		} else if (text.toUpperCase() === this.question.answer){
+		} else if (text.toUpperCase().trim() === this.question.answer){
 			this.correctPlayers.push(convertText(user.username, "sans-serif"));
 		}
 	}
 
 	displayAnswers(q, channel){
 		if (this.correctPlayers.length >= 2){
-			const displayedPlayers = this.correctPlayers.join(", ").replace(/, (\w+)$/, " and $1");
+			const displayedPlayers = this.correctPlayers.join(", ").replace(/, (.+)$/, " and $1");
 			client.say(channel, `The correct answer is ${q.answer}. Well done ${displayedPlayers} for getting the correct answer!`);
 		} else if (this.correctPlayers.length === 1){
 			client.say(channel, `The correct answer is ${q.answer}. Well done ${this.correctPlayers[0]} for getting the correct answer!`);
@@ -107,6 +108,12 @@ class Quiz {
 		});
 	}
 
+	sortScores(){
+		this.playerData.sort((a, b) => {
+			return b.score - a.score;
+		});
+	}
+
 	displayScores(channel){
 		const dataToDisplay = this.playerData.map(person => person.username + " " + person.score).join(", ");
 		if (dataToDisplay != ""){
@@ -138,6 +145,7 @@ const quizQuestion = (channel, user, command, text, fullQuizStarted = false) => 
 							if (object.channelName === channel){
 								quizData[j].lastRound = obj;
 								quizData[j].updateScores();
+								quizData[j].sortScores();
 								quizData[j].displayScores(channel);
 							}
 						});
@@ -149,7 +157,7 @@ const quizQuestion = (channel, user, command, text, fullQuizStarted = false) => 
 
 	if (questionStarted){
 		let channelIndex = roundData.findIndex(object => object.channelName === channel);
-		if (questionStarted && ["A", "B", "C", "D"].includes(text.toUpperCase())){
+		if (questionStarted && /^[A-D] *$/.test(text.toUpperCase())){
 			roundData[channelIndex].checkAnswer(user, text, channel);
 		}
 	}
@@ -157,8 +165,19 @@ const quizQuestion = (channel, user, command, text, fullQuizStarted = false) => 
 
 const giveQuiz = (channel, user, command, text) => {
 
-	if (command === "!quizhelp"){
-		client.say(channel, "For each question, pick one of the 4 choices A, B, C or D. If your answer is correct, your score increases depending on how fast you answered compared to everyone else. The person at the end with the greatest score wins. Good luck :)");
+	if (command === "!quiz" && text === "help"){
+		client.say(channel, "For each question, pick one of the 4 choices A, B, C or D. If your answer is correct, your score increases depending on how fast you answered compared to everyone else. The person at the end with the greatest score wins. To stop the quiz at anytime, type !quiz stop. Good luck :)");
+	}
+
+	if (command === "!quiz" && text === "stop"){
+		for (let i=0; i<timeouts.length; i++) {
+			clearTimeout(timeouts[i]);
+		}
+		quizData.forEach((obj, i) => {
+			if (obj.channelName === channel){
+				quizData.splice(i, 1);
+			}
+		});
 	}
 
 	let fullQuizStarted = hasStarted(quizData, channel);
@@ -167,11 +186,20 @@ const giveQuiz = (channel, user, command, text) => {
 		
 		quizData.push(new Quiz(channel));
 
-		client.say(channel, "A quiz is about to start. There will be 10 questions. Type '!quizhelp' if you're unsure how to play.");
+		let noQuestions;
+		if (text === ""){
+			noQuestions = 10;
+			client.say(channel, `A quiz is about to start. There will be 10 questions. Type '!quiz help' if you're unsure how to play.`);
+		} else if (parseFloat(text) > 0 && Number.isInteger(parseFloat(text))){
+			noQuestions = parseInt(text);
+			client.say(channel, `A quiz is about to start. There will be ${noQuestions} questions. Type '!quiz help' if you're unsure how to play.`);
+		} else {
+			noQuestions = 0;
+			client.say(channel, `That isn't a valid number of questions!`);
+		}
 
-		let noQuestions = 10;
 		for (let i = 0; i <= noQuestions; i++){
-			setTimeout(() => {
+			timeouts.push(setTimeout(() => {
 				if (i != noQuestions){
 					client.say(channel, `Question ${i + 1}:`);
 					quizQuestion(channel, user, "!quizquestion", "", true);
@@ -181,28 +209,15 @@ const giveQuiz = (channel, user, command, text) => {
 					quizData.forEach((obj, i) => {
 						if (obj.channelName === channel){
 							const dataToDisplay = obj.playerData.map(person => person.username + " " + person.score).join(", ");
-							client.say(channel, `The quiz has finished. Final scores: ${dataToDisplay}`)
+							client.say(channel, `The quiz has finished. Final scores: ${dataToDisplay}. Congrats to ${obj.playerData[0].username} for winning the quiz!`);
 							quizData.splice(i, 1);
 						}
 					});
 				}
 				
-			}, i * 21000 + 30000);
+			}, i * 21000 + 30000));
 		}
 	}
 }
 
 module.exports = { giveQuiz, quizQuestion };
-
-//Incomplete code
-// if (text === ""){
-// 	text = "10";
-// }
-
-// let noQuestions;
-// if (parseFloat(text) > 0 && Number.isInteger(parseFloat(text))){
-// 	noQuestions = parseInt(text);
-// } else {
-// 	fullQuizStarted = false;
-// 	client.say(channel, "That is not a valid number of questions!");
-// }
