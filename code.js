@@ -25,14 +25,16 @@ client.on("message", (channel, user, message, self) => {
 	animeQuote(channel, user, command, text);
 	//getJam(channel, user, command, text);
 
+	if (command === "!dice"){
+		text = text || 6;
+		if (parseFloat(text) > 0 && Number.isInteger(parseFloat(text))){
+			randomNumber = Math.floor(Math.random() * parseInt(text)) + 1;
+			client.say(channel, randomNumber.toString());
+		} else {
+			client.say(channel, "That is not a valid number for a dice.");
+		}
+	}
+	
 });
 
-// if (command === "!dice"){
-// 	text = text || 6;
-// 	if (parseFloat(text) > 0 && Number.isInteger(parseFloat(text))){
-// 		randomNumber = Math.floor(Math.random() * parseInt(text)) + 1;
-// 		client.say(channel, randomNumber.toString());
-// 	} else {
-// 		client.say(channel, "That is not a valid number for a dice.");
-// 	}
-// }
+
